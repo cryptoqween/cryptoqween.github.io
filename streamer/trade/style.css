@@ -41,3 +41,19 @@ td {
 .Unknown {
 	background-color: #3e6b89;
 }
+
+.source {
+	text-align: left;
+	font-size: 15px;
+	color: white;
+	margin: 10px;
+}
+
+a {
+	color: #eeeeee;
+	font-size: 15px;
+}
+
+a:hover {
+	color: #c84473;
+}
