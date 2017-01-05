@@ -32,7 +32,10 @@ var displayTrade = function(trade) {
 
 var socket = io.connect('https://streamer.cryptocompare.com/');
 
-//Subscribe to multiple exchanges
+//Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
+//Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
+//For aggregate quote updates use CCCAGG as market
+//You can subscribe to multiple exchanges
 var subscription = ['0~Poloniex~BTC~USD'];
 subscription.push('0~Coinbase~BTC~USD');
 subscription.push('0~Bitfinex~BTC~USD');
@@ -42,25 +45,11 @@ socket.emit('SubAdd', {subs:subscription} );
 socket.on("m", function(message){
 	var messageType = message.substring(0, message.indexOf("~"));
 	var res = {};
-	switch(messageType){
-			case CCC.STATIC.TYPE.TRADE:
-				res = CCC.TRADE.unpack(message);
-				displayTrade(res);
-			break;
-			case CCC.STATIC.TYPE.CURRENT:
-				res = CCC.CURRENT.unpack(message);
-			break;
-			case CCC.STATIC.TYPE.CURRENTAGG:
-				res = CCC.CURRENT.unpack(message);
-			break;
-			case CCC.STATIC.TYPE.ORDERBOOK:
-				res = CCC.ORDER.unpack(message);
-			break;
-			case CCC.STATIC.TYPE.FULLORDERBOOK:
-				res = CCC.ORDER.unpack(message);
-			break;
-	}
 
-	console.log(res);
+	if (messageType === CCC.STATIC.TYPE.TRADE) {
+		res = CCC.TRADE.unpack(message);
+		displayTrade(res);
+		console.log(res);
+	}	
 
 });

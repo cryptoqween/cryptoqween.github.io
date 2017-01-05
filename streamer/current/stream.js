@@ -9,11 +9,9 @@ var displayQuote = function(_quote) {
 	document.getElementById("fsym").innerHTML = _quote.FROMSYMBOL;
 	document.getElementById("tsym").innerHTML = _quote.TOSYMBOL;
 	document.getElementById("price").innerHTML = _quote.PRICE;
-
 	document.getElementById("volume").innerHTML = CCC.convertValueToDisplay(fsym, _quote.LASTVOLUME);
 	document.getElementById("volumeto").innerHTML = CCC.convertValueToDisplay(tsym, _quote.LASTVOLUMETO);
-	document.getElementById("24volume").innerHTML = CCC.convertValueToDisplay(fsym, _quote.VOLUME24HOUR);
-	
+	document.getElementById("24volume").innerHTML = CCC.convertValueToDisplay(fsym, _quote.VOLUME24HOUR);	
 	document.getElementById("24volumeto").innerHTML = CCC.convertValueToDisplay(tsym, _quote.VOLUME24HOURTO);
 	document.getElementById("tradeid").innerHTML = _quote.LASTTRADEID.toFixed(0);
 
@@ -39,9 +37,11 @@ var updateQuote = function(result) {
 	displayQuote(quote);
 }
 
-
 var socket = io.connect('https://streamer.cryptocompare.com/');
 
+//Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
+//Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
+//For aggregate quote updates use CCCAGG as market
 var subscription = ['5~CCCAGG~BTC~USD'];
 
 socket.emit('SubAdd', {subs:subscription} );
@@ -49,25 +49,10 @@ socket.emit('SubAdd', {subs:subscription} );
 socket.on("m", function(message){
 	var messageType = message.substring(0, message.indexOf("~"));
 	var res = {};
-	switch(messageType){
-			case CCC.STATIC.TYPE.TRADE:
-				res = CCC.TRADE.unpack(message);
-			break;
-			case CCC.STATIC.TYPE.CURRENT:
-				res = CCC.CURRENT.unpack(message);
-			break;
-			case CCC.STATIC.TYPE.CURRENTAGG:
-				res = CCC.CURRENT.unpack(message);
-				updateQuote(res);
-			break;
-			case CCC.STATIC.TYPE.ORDERBOOK:
-				res = CCC.ORDER.unpack(message);
-			break;
-			case CCC.STATIC.TYPE.FULLORDERBOOK:
-				res = CCC.ORDER.unpack(message);
-			break;
-		
-	}
-
+	if (messageType === CCC.STATIC.TYPE.CURRENTAGG) {
+		res = CCC.CURRENT.unpack(message);
+		console.log(res);
+		updateQuote(res);
+	}						
 });
 
