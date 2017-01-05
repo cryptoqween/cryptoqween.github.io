@@ -7,6 +7,7 @@ Include ccc-streamer-utilities.js file to your project to get utility functions.
 
 ## Content
 
+### Streamer API
 1. [Trade streamer example](https://cryptoqween.github.io/streamer/trade/)
 2. [Current streamer example](https://cryptoqween.github.io/streamer/current/)
 
