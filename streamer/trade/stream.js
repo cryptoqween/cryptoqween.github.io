@@ -32,6 +32,7 @@ var displayTrade = function(trade) {
 
 var socket = io.connect('https://streamer.cryptocompare.com/');
 
+//Subscribe to multiple exchanges
 var subscription = ['0~Poloniex~BTC~USD'];
 subscription.push('0~Coinbase~BTC~USD');
 subscription.push('0~Bitfinex~BTC~USD');
