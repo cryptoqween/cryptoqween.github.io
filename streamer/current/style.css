@@ -1,0 +1,56 @@
+.wrapper {
+	width: 220px;
+	height: 250px;
+	margin: auto;
+	background-color: #132c40;
+	color: white;
+	padding: 15px 50px 10px 50px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	border-radius: 5px;
+	font-size: 15px;
+}
+
+h1 {
+	font-size: 24px;
+	color: #85c1cc;
+	padding: 0;
+}
+
+.label {
+	color: #a5bdc1;
+}
+
+.price {
+	font-size: 25px;
+}
+
+.value {
+	color: white;
+}
+
+.up {
+	color: #1cf6ba;
+}
+
+.down {
+	color: #c84473;
+}
+
+.source {
+	margin-top: 50px;
+	text-align: left;
+	font-size: 12px;
+}
+
+a {
+	color: #eeeeee;
+	font-size: 12px;
+}
+
+a:hover {
+	color: #c84473;
+}
+
+.market {
+	color: #1cf6ba;
+}
