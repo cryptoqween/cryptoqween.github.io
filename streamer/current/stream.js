@@ -42,7 +42,6 @@ var updateQuote = function(result) {
 
 var socket = io.connect('https://streamer.cryptocompare.com/');
 
-// 
 var subscription = ['5~CCCAGG~BTC~USD'];
 
 socket.emit('SubAdd', {subs:subscription} );
@@ -67,7 +66,7 @@ socket.on("m", function(message){
 			case CCC.STATIC.TYPE.FULLORDERBOOK:
 				res = CCC.ORDER.unpack(message);
 			break;
-
+		
 	}
 
 });

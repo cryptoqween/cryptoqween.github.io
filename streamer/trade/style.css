@@ -1,0 +1,43 @@
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.wrapper {
+	width: 700px;
+	background-color: #132c40;
+	margin: auto;
+	display: block;
+	padding: 20px;
+	border-radius: 5px;
+}
+
+h1 {
+	color: white;
+}
+
+table {
+	width: 500px;
+	margin: auto;
+	border: white;
+}
+
+th {
+	color: white;
+}
+
+td {
+	text-align: right;
+	color: white;
+}
+
+.Buy {
+	background-color: #3dd2cc;
+}
+
+.Sell {
+	background-color: #c84473;
+}
+
+.Unknown {
+	background-color: #3e6b89;
+}
