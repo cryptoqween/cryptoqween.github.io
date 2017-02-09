@@ -100,7 +100,7 @@ from bokeh.charts import HeatMap, bins, output_file, show
 from bokeh.palettes import RdBu, magma
 from bokeh.models import ColumnDataSource, LabelSet, Label
 
-output_file("ccy-premium.html", title="BTC premia")
+output_file("index.html", title="BTC premia")
 
 dateToDisplay = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
