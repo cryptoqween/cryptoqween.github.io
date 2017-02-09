@@ -12,14 +12,14 @@ def getJSONfromURL(url):
 		return data
 
 def getBTCAggHistoDay(_ccy):
-	url = 'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym='+ _ccy +'&limit=100'
+	url = 'https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym='+ _ccy +'&limit=600'
 	data = getJSONfromURL(url)
 	return data['Data']
 
 def getFixerDayUSD(_currencies):
 	closingdate = datetime.date.today()
 	fxData = []
-	for i in range(1,102):
+	for i in range(1,2):
 		closingdate = closingdate - timedelta(days=1)
 		closing = closingdate.strftime("%Y-%m-%d")
 		url = 'http://api.fixer.io/' + closing + '?base=USD'
@@ -50,9 +50,12 @@ def getCloseBTCTable(_currencies):
 	return close_btc
 
 def calcConversionTable(_currencies, btc_df, fiat_df):
-	conversion_df = btc_df[currencies].divide(fiat_df[currencies])
+	row = btc_df.shape[0]
+	fiat_df = fiat_df.append([fiat_df]*(row-1), ignore_index=True)
+	conversion_df = btc_df[currencies]/(fiat_df[currencies])
 	conversion_df['time'] = btc_df['time']
 	conversion_df['USD'] = btc_df['USD']
+	print(conversion_df)
 	return conversion_df
 
 currencies = ['CNY', 'JPY', 'INR', 'EUR', 'GBP']
@@ -61,8 +64,9 @@ currenciesfull = ['CNY', 'JPY', 'INR', 'EUR', 'GBP', 'USD']
 close_btc = getCloseBTCTable(currencies)
 fiat = getFixerDayUSD(currencies)
 conversion_close = calcConversionTable(currencies, close_btc, fiat)
-rolling_7day = conversion_close[currenciesfull].rolling(7).mean().dropna()
-rolling_30day = conversion_close[currenciesfull].rolling(30).mean().dropna()
+conversion_close.to_csv('conversion.csv')
+rolling_7day = conversion_close[currenciesfull].rolling(60).mean().dropna()
+rolling_30day = conversion_close[currenciesfull].rolling(600).mean().dropna()
 
 def calcMatrix(df):
 	matrix = []
@@ -100,23 +104,24 @@ from bokeh.charts import HeatMap, bins, output_file, show
 from bokeh.palettes import RdBu, magma
 from bokeh.models import ColumnDataSource, LabelSet, Label
 
-output_file("ccy-premium.html", title="BTC premia")
+dateToDisplay = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+output_file("index.html", title="BTC premia")
 
-hm1 = HeatMap(prem_last, x='from', y='to', values='diff', title='Premia Last Closing (USD). diff = from - to, % = (from - to)/to', stat=None, palette=['green', 'gray', 'red'], legend=False)
+hm1 = HeatMap(prem_last, x='from', y='to', values='diff', title=dateToDisplay, stat=None, palette=['green', 'gray', 'red'], legend=False)
 source1 = ColumnDataSource(data=prem_last)
 labels1a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source1)
 labels1b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-30, render_mode='canvas', source=source1)
 hm1.add_layout(labels1a)
 hm1.add_layout(labels1b)
 
-hm2 = HeatMap(prem_7day, x='from', y='to', values='diff', title='Premia 7 days average (USD)', stat=None, palette=['green', 'gray', 'red'], legend=False)
+hm2 = HeatMap(prem_7day, x='from', y='to', values='diff', title= dateToDisplay + 'Premia Last 10 minutes average (USD)', stat=None, palette=['green', 'gray', 'red'], legend=False)
 source2 = ColumnDataSource(data=prem_7day)
 labels2a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source2)
 labels2b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-30, render_mode='canvas', source=source2)
 hm2.add_layout(labels2a)
 hm2.add_layout(labels2b)
 
-hm3 = HeatMap(prem_30day, x='from', y='to', values='diff', title='Premia 30 days average (USD)', stat=None, palette=['green', 'gray', 'red'], legend=False)
+hm3 = HeatMap(prem_30day, x='from', y='to', values='diff', title=dateToDisplay + 'Premia last 60 minutes average (USD)', stat=None, palette=['green', 'gray', 'red'], legend=False)
 source3 = ColumnDataSource(data=prem_30day)
 labels3a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source3)
 labels3b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-30, render_mode='canvas', source=source3)
