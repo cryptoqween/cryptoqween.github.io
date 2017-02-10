@@ -61,6 +61,7 @@ currenciesfull = ['CNY', 'JPY', 'INR', 'EUR', 'GBP', 'USD']
 close_btc = getCloseBTCTable(currencies)
 fiat = getFixerDayUSD(currencies)
 conversion_close = calcConversionTable(currencies, close_btc, fiat)
+conversion_close.to_csv('conversion.csv')
 rolling_7day = conversion_close[currenciesfull].rolling(7).mean().dropna()
 rolling_30day = conversion_close[currenciesfull].rolling(30).mean().dropna()
 
@@ -98,6 +99,7 @@ from bokeh.layouts import row
 from bokeh.plotting import figure, show, output_file
 from bokeh.charts import HeatMap, bins, output_file, show
 from bokeh.palettes import RdBu, magma
+from bokeh.models import ColumnDataSource, LabelSet, Label
 from bokeh.models import ColumnDataSource, LabelSet, Label
 
 output_file("index.html", title="BTC premia")

@@ -35,12 +35,11 @@ var socket = io.connect('https://streamer.cryptocompare.com/');
 //Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
 //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
 //For aggregate quote updates use CCCAGG as market
-//You can subscribe to multiple exchanges
-var subscription = ['0~Poloniex~BTC~USD'];
-subscription.push('0~Coinbase~BTC~USD');
-subscription.push('0~Bitfinex~BTC~USD');
-
-socket.emit('SubAdd', {subs:subscription} );
+//You can subscribe to all exchanges for a currency pair by using the following API
+$.getJSON( "https://min-api.cryptocompare.com/data/subs?fsym=BTC&tsyms=USD", function( data ) {
+ var subscription = data['USD']['TRADES'];
+ socket.emit('SubAdd', {subs:subscription} );	
+});
 
 socket.on("m", function(message){
 	var messageType = message.substring(0, message.indexOf("~"));
