@@ -57,3 +57,23 @@ a {
 a:hover {
 	color: #c84473;
 }
+
+.subs-button {
+	width: 100px;
+	height: 50px;
+	background-color: #3dd2cc;
+	font-size: 12px;
+	margin: 10px;
+}
+
+.unsubs-button {
+	width: 100px;
+	height: 50px;
+	background-color: #c84473;
+	font-size: 12px;
+	margin: 10px;
+}
+
+#message {
+	color: white;
+}

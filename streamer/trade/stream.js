@@ -36,9 +36,12 @@ var socket = io.connect('https://streamer.cryptocompare.com/');
 //Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
 //For aggregate quote updates use CCCAGG as market
 //You can subscribe to all exchanges for a currency pair by using the following API
+var subscription;
+
 $.getJSON( "https://min-api.cryptocompare.com/data/subs?fsym=BTC&tsyms=USD", function( data ) {
- var subscription = data['USD']['TRADES'];
- socket.emit('SubAdd', {subs:subscription} );	
+ subscription = data['USD']['TRADES'];
+ socket.emit('SubAdd', {subs:subscription} );
+ $('.message').innerHTML = 'Streaming...'	
 });
 
 socket.on("m", function(message){
@@ -51,4 +54,16 @@ socket.on("m", function(message){
 		console.log(res);
 	}	
 
+});
+
+$('.subs-button').on('click', function() {
+	console.log('subsribing');
+	socket.emit('SubAdd', {subs:subscription} );
+	$('#message').html('Streaming...');	
+});
+ 	
+$('.unsubs-button').on('click', function() {
+	console.log('Unsubsribing');
+	socket.emit('SubRemove', {subs:subscription} );
+	$('#message').html('Stopped streaming.');	
 });
