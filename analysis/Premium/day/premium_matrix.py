@@ -12,14 +12,14 @@ def getJSONfromURL(url):
 		return data
 
 def getBTCAggHistoDay(_ccy):
-	url = 'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym='+ _ccy +'&limit=100'
+	url = 'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym='+ _ccy +'&limit=50'
 	data = getJSONfromURL(url)
 	return data['Data']
 
 def getFixerDayUSD(_currencies):
 	closingdate = datetime.date.today()
 	fxData = []
-	for i in range(1,102):
+	for i in range(1,52):
 		closingdate = closingdate - timedelta(days=1)
 		closing = closingdate.strftime("%Y-%m-%d")
 		url = 'http://api.fixer.io/' + closing + '?base=USD'
@@ -55,8 +55,8 @@ def calcConversionTable(_currencies, btc_df, fiat_df):
 	conversion_df['USD'] = btc_df['USD']
 	return conversion_df
 
-currencies = ['CNY', 'JPY', 'INR', 'EUR', 'GBP']
-currenciesfull = ['CNY', 'JPY', 'INR', 'EUR', 'GBP', 'USD']
+currencies = ['CNY', 'JPY', 'KRW']
+currenciesfull = ['CNY', 'JPY', 'KRW','USD']
 
 close_btc = getCloseBTCTable(currencies)
 fiat = getFixerDayUSD(currencies)
@@ -100,7 +100,6 @@ from bokeh.plotting import figure, show, output_file
 from bokeh.charts import HeatMap, bins, output_file, show
 from bokeh.palettes import RdBu, magma
 from bokeh.models import ColumnDataSource, LabelSet, Label
-from bokeh.models import ColumnDataSource, LabelSet, Label
 
 output_file("index.html", title="BTC premia")
 
@@ -108,23 +107,23 @@ dateToDisplay = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 hm1 = HeatMap(prem_last, x='from', y='to', values='diff', title=dateToDisplay+' Premia Last Closing (USD). diff = from - to, % = (from - to)/to', stat=None, palette=['green', 'gray', 'red'], legend=False)
 source1 = ColumnDataSource(data=prem_last)
-labels1a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source1)
-labels1b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-30, render_mode='canvas', source=source1)
-hm1.add_layout(labels1a)
+#labels1a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source1)
+labels1b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source1)
+#hm1.add_layout(labels1a)
 hm1.add_layout(labels1b)
 
 hm2 = HeatMap(prem_7day, x='from', y='to', values='diff', title=dateToDisplay+' Premia 7 days average (USD)', stat=None, palette=['green', 'gray', 'red'], legend=False)
 source2 = ColumnDataSource(data=prem_7day)
-labels2a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source2)
-labels2b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-30, render_mode='canvas', source=source2)
-hm2.add_layout(labels2a)
+#labels2a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source2)
+labels2b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source2)
+#hm2.add_layout(labels2a)
 hm2.add_layout(labels2b)
 
 hm3 = HeatMap(prem_30day, x='from', y='to', values='diff', title=dateToDisplay+' Premia 30 days average (USD)', stat=None, palette=['green', 'gray', 'red'], legend=False)
 source3 = ColumnDataSource(data=prem_30day)
-labels3a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source3)
-labels3b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-30, render_mode='canvas', source=source3)
-hm3.add_layout(labels3a)
+#labels3a = LabelSet(x='from', y='to', text='formatted', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source3)
+labels3b = LabelSet(x='from', y='to', text='percent', level='glyph', x_offset=-15, y_offset=-10, render_mode='canvas', source=source3)
+#hm3.add_layout(labels3a)
 hm3.add_layout(labels3b)
 
 show(row(hm1, hm2, hm3)) 
