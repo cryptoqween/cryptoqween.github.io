@@ -5,6 +5,8 @@ from datetime import timedelta
 import pandas as pd
 import time
 
+baseCcy = 'BTC'
+
 def getJSONfromURL(url):
 	with urllib.request.urlopen(url) as response:
 		str_response = response.read().decode('utf-8')
@@ -12,7 +14,7 @@ def getJSONfromURL(url):
 		return data
 
 def getBTCAggHistoDay(_ccy):
-	url = 'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym='+ _ccy +'&limit=50'
+	url = 'https://min-api.cryptocompare.com/data/histoday?fsym='+ baseCcy +'&tsym='+ _ccy +'&limit=50'
 	data = getJSONfromURL(url)
 	return data['Data']
 

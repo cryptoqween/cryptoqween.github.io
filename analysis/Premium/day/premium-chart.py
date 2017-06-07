@@ -5,6 +5,8 @@ import dateutil.parser
 import time
 import numpy as np
 
+baseCcy = 'BTC'
+
 def formatHeader(df, pair):
 	cols = df.columns
 	newcols = []
@@ -19,7 +21,7 @@ def getMinuteData(tsym, exchange):
 	currentTS = str(int(time.time()))
 	allData = []
 	for i in range(1,6):
-		url = 'https://min-api.cryptocompare.com/data/histominute?fsym=BTCC&tsym='+ tsym +'&limit=2000&aggregate=1&e='+ exchange +'&toTs=' + currentTS
+		url = 'https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym='+ tsym +'&limit=2000&aggregate=1&e='+ exchange +'&toTs=' + currentTS
 		print(url)
 		resp = requests.get(url=url)
 		data = json.loads(resp.text)
@@ -84,11 +86,11 @@ def formatChart(v):
 	return v
 
 def getPriceChart(x_dates, y1, y2, ccy):
-	title = "BTC Trading Prices USD vs " + ccy + ". Source: CryptoCompare"
-	ccypair = "BTC" + ccy
+	title = baseCcy + " Trading Prices USD vs " + ccy + ". Source: CryptoCompare"
+	ccypair = baseCcy + ccy
 	p = figure(title=title, x_axis_label='Date', y_axis_label='USD', plot_width=1000, plot_height=500, x_axis_type="datetime")	
 	p.line(x_dates, y1, line_color="#ffaa0c", line_width=2, legend=ccypair)
-	p.line(x_dates, y2, line_color="white", line_width=2, legend="BTCUSD")
+	p.line(x_dates, y2, line_color="white", line_width=2, legend=(baseCcy + "USD"))
 	p = formatChart(p)
 	
 	# source = ColumnDataSource(dict(
@@ -102,22 +104,22 @@ def getPriceChart(x_dates, y1, y2, ccy):
 	return p
 
 def getPremiumChart(x_dates, y, diff, ccy):
-	title = "BTC Trading Premium USD vs " + ccy
-	ccypair = "BTC" + ccy
-	v = figure(title=title, x_axis_label='Date', y_axis_label='USD', plot_width=1000, plot_height=500, x_axis_type="datetime", y_range=(-100, 700))
+	title = baseCcy + " Trading Premium USD vs " + ccy + " Souce: CryptoCompare.com"
+	ccypair = baseCcy + ccy
+	v = figure(title=title, x_axis_label='Date', y_axis_label='Percent', plot_width=1000, plot_height=500, x_axis_type="datetime", y_range=(-10, 75))
 	v.image_url(url=['ccc-logo.png'], x=0, y=1)
 	limit = np.zeros(len(diff))
 	band_x = np.append(x_dates, x_dates[::-1])
 	band_y = np.append(diff, limit[::-1])
 	v.patch(band_x, band_y, color='white', fill_alpha=0.2)
 	v.line(x_dates, diff, line_color="white", legend="Premium vs USD")
-	v.extra_y_ranges = {"price": Range1d(start=1000, end=2700)}
+	v.extra_y_ranges = {"price": Range1d(start=1000, end=4000)}
 	v.line(x_dates, y, line_color="#ffaa0c", line_width=2, legend=ccypair, y_range_name="price")
-	v.add_layout(LinearAxis(y_range_name="price"), 'right')
+	v.add_layout(LinearAxis(y_range_name="price", axis_label="USD"), 'right')
 	v = formatChart(v)
 	return v
 
-output_file("btc-trading.html")
+output_file(baseCcy + "-trading.html")
 dates = conversion["time"].apply(lambda x: datetime.fromtimestamp(int(x)).strftime('%Y-%m-%d %H:%M:%S'))
 x_dates = np.array(dates, dtype=np.datetime64)
 
@@ -127,9 +129,13 @@ p2 = getPriceChart(x_dates, conversion['KRW'], conversion['USD'], "KRW")
 
 #source = ColumnDataSource(data=dict(date=x_news_dates, price=news_prices, news=news_items))
 
-diff1 = conversion['JPY'] - conversion['USD'] 
+diff1 = conversion['JPY'] - conversion['USD']
+diff1 = diff1/conversion['USD']
+diff1 = diff1*100
 p3 = getPremiumChart(x_dates, conversion['JPY'], diff1, 'JPY')
-diff2 = conversion['KRW'] - conversion['USD'] 
+diff2 = conversion['KRW'] - conversion['USD']
+diff2 = diff2/conversion['USD']
+diff2 = diff2*100
 p4 = getPremiumChart(x_dates, conversion['KRW'], diff2, 'KRW')
 #p1.scatter(x='date', y='price', size=10, color='white', source=source)
 
