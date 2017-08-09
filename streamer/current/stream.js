@@ -38,14 +38,14 @@ var displayQuote = function(_quote) {
 	document.getElementById("change_" + pair).innerHTML = CCC.convertValueToDisplay(tsym, _quote.CHANGE24H);
 	document.getElementById("changepct_" + pair).innerHTML = _quote.CHANGEPCT24H.toFixed(2) + "%";
 
-	if (quote.FLAGS === "1"){
-		document.getElementById("price").className = "up";
+	if (_quote.FLAGS === "1"){
+		document.getElementById("price_" + pair).className = "up";
 	} 
-	else if (quote.FLAGS === "2") {
-		document.getElementById("price").className = "down";
+	else if (_quote.FLAGS === "2") {
+		document.getElementById("price_" + pair).className = "down";
 	}
-	else if (quote.FLAGS === "4") {
-		document.getElementById("price").className = "";
+	else if (_quote.FLAGS === "4") {
+		document.getElementById("price_" + pair).className = "";
 	}
 }
 
