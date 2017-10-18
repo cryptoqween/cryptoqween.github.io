@@ -18,6 +18,8 @@ var createDom = function(pair) {
 	wrapper.appendChild(div);
 };
 
+//HI
+
 var displayQuote = function(_quote) {
 
 	var fsym = CCC.STATIC.CURRENCY.SYMBOL[_quote.FROMSYMBOL];
