@@ -1,39 +1,61 @@
+<!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="style.css"></link>
 	<title>CryptoCompare Streamer API Example</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
-
-<div class="wrapper">
-<h1>BTC Market Trades</h1>
-<div>
-	<button class="subs-button">Subscribe</button>
-	<button class="unsubs-button">Unsubscribe</button>
-	<span id="message">Streaming ...</span>
-</div>
-<div class="source"> Source: <a href="http://www.cryptocompare.com">CryptoCompare</a></div>
-<table id="trades">
-	<tr>
-		<th>Market</th>
-		<th>Type</th>
-		<th>ID</th>
-		<th>Price</th>
-		<th>Quantity</th>
-		<th>Total</th>
-	</tr>
-</table>
-</div>
-
-<script
-  src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
-<script src="../ccc-streamer-utilities.js"></script>
-<script src="./stream.js"></script>
-
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2">
+				<div class="panel-group">
+					<div class="panel panel-primary">
+						<div class="panel-heading text-center">
+							<h4>BTC-USD Market Trades</h4>
+						</div>
+						<div class="panel-body">
+							<h6><a id="source" class="text-right" href="https://www.cryptocompare.com/"><strong>Source:</strong> CryptoCompare</a></h6>
+							<div class="row btn-row">
+								<div class="col-xs-4">
+									<h3 id="stream-text">Streaming...</h3>
+								</div>
+								<div class="col-xs-2">
+									<a class="btn btn-success btn-lg subon" id="subscribe">Subscribe</a>
+								</div>
+								<div class="col-xs-2">
+									<a class="btn btn-danger btn-lg" id="unsubscribe">Unsubscribe</a>
+								</div>
+							</div>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Market</th>
+										<th>Type</th>
+										<th>ID</th>
+										<th>Price</th>
+										<th>Quantity</th>
+										<th>Total</th>
+									</tr>
+								</thead>
+								<tbody id="trades">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="../ccc-streamer-utilities.js"></script>
+	<script src="./stream.js"></script>
 </body>
+
 </html>

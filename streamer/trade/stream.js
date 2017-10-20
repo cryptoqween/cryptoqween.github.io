@@ -1,69 +1,73 @@
-var NUMBER_OF_TRADES = 20;
+var streamUrl = "https://streamer.cryptocompare.com/";
+var fsym = "BTC";
+var tsym = "USD";
+var currentSubs;
+var dataUrl = "https://min-api.cryptocompare.com/data/subs?fsym=" + fsym + "&tsyms=" + tsym;
+var socket = io(streamUrl);
 
-var getFlag = function(trade) {
-	let flag = trade.F;
-	if (flag === "1") {
-		return "Sell";
+$.getJSON(dataUrl, function(data) {
+	currentSubs = data['USD']['CURRENT'];
+	socket.emit('SubAdd', { subs: currentSubs });
+});
+
+socket.on('m', function(currentData) {
+	unpackData(currentData);
+});
+
+var unpackData = function(data) {
+	var coinfsym = CCC.STATIC.CURRENCY.getSymbol(fsym);
+	var cointsym = CCC.STATIC.CURRENCY.getSymbol(tsym) 
+	var incomingTrade = CCC.CURRENT.unpack(data);
+	var newTrade = {
+		Market: incomingTrade['MARKET'],
+		Type: incomingTrade['TYPE'],
+		ID: incomingTrade['LASTTRADEID'],
+		Price: CCC.convertValueToDisplay(cointsym, incomingTrade['PRICE']),
+		Quantity: CCC.convertValueToDisplay(coinfsym, incomingTrade['LASTVOLUME']),
+		Total: CCC.convertValueToDisplay(cointsym, incomingTrade['LASTVOLUME'] * incomingTrade['PRICE'])
+	};
+
+	if (incomingTrade['FLAGS'] == 1) {
+		newTrade['Type'] = "SELL";
 	}
-	else if (flag === "2") {
-		return "Buy";
+	else if (incomingTrade['FLAGS'] == 2) {
+		newTrade['Type'] = "BUY";
 	}
-	else if (flag === "4") {
-		return "Unknown";
+	else if (incomingTrade['MARKET'] == 'LOADCOMPLETE') {
+		newTrade.Type = "-";
+		newTrade.ID = "-";
+		newTrade.Price = "-";
+		newTrade.Quantity = "-";
+		newTrade.Total = "-";
+	}
+	else {
+		newTrade['Type'] = "UNKNOWN";
+	}
+	displayData(newTrade);
+};
+
+var displayData = function(dataUnpacked) {
+	var maxTableSize = 30;
+	var length = $('table tr').length;
+	$('#trades').after(
+		"<tr class="+dataUnpacked.Type+"><th>" + dataUnpacked.Market + "</th><th>" + dataUnpacked.Type + "</th><th>" + dataUnpacked.ID + "</th><th>" + dataUnpacked.Price + "</th><th>" + dataUnpacked.Quantity + "</th><th>" + dataUnpacked.Total + "</th></tr>"
+	);
+
+	if (length >= (maxTableSize)) {
+		$('table tr:last').remove();
 	}
 };
 
-var displayTrade = function(trade) {
-	let table = document.getElementById("trades");
-	row = table.insertRow(1);
-	let flag = getFlag(trade);
-	let fsym = CCC.STATIC.CURRENCY.SYMBOL[trade.FSYM];
-	let tsym = CCC.STATIC.CURRENCY.SYMBOL[trade.TSYM];
-	let price = CCC.convertValueToDisplay(tsym, trade.P);
-	let quantity = CCC.convertValueToDisplay(fsym, trade.Q);
-	let total = CCC.convertValueToDisplay(tsym, trade.TOTAL);
-	row.className = flag;
-	row.innerHTML = '<td>'+ trade.M +'</td><td>'+ flag +'</td><td>'+ trade.ID +'</td><td>'+ price +'</td><td>'+ quantity +'</td><td>' + total + '</td>';
-	if (table.rows.length > NUMBER_OF_TRADES)
-	{
-		table.deleteRow(table.rows.length-1)
-	}
-};
-
-var socket = io.connect('https://streamer.cryptocompare.com/');
-
-//Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
-//Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
-//For aggregate quote updates use CCCAGG as market
-//You can subscribe to all exchanges for a currency pair by using the following API
-var subscription;
-
-$.getJSON( "https://min-api.cryptocompare.com/data/subs?fsym=BTC&tsyms=USD", function( data ) {
- subscription = data['USD']['TRADES'];
- socket.emit('SubAdd', {subs:subscription} );
- $('.message').innerHTML = 'Streaming...'	
+$('#unsubscribe').click(function() {
+	$('#subscribe').removeClass('subon');
+	$(this).addClass('subon');
+	$('#stream-text').text('Stream stopped');
+	socket.emit('SubRemove', { subs: currentSubs });
 });
 
-socket.on("m", function(message){
-	var messageType = message.substring(0, message.indexOf("~"));
-	var res = {};
-
-	if (messageType === CCC.STATIC.TYPE.TRADE) {
-		res = CCC.TRADE.unpack(message);
-		displayTrade(res);
-		console.log(res);
-	}	
-
-});
-
-$('.subs-button').on('click', function() {
-	console.log('subsribing');
-	socket.emit('SubAdd', {subs:subscription} );
-	$('#message').html('Streaming...');	
-});
- 	
-$('.unsubs-button').on('click', function() {
-	console.log('Unsubsribing');
-	socket.emit('SubRemove', {subs:subscription} );
-	$('#message').html('Stopped streaming.');	
+$('#subscribe').click(function() {
+	$('#unsubscribe').removeClass('subon');
+	$(this).addClass('subon');
+	$('#stream-text').text("Streaming...");
+	socket.emit('SubAdd', { subs: currentSubs });
 });
