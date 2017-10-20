@@ -1,16 +1,69 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="style.css"></link>
 	<title>CryptoCompare Streamer API Example</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
-<div id="content"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
-<script src="../ccc-streamer-utilities.js"></script>
-<script src="./stream.js"></script>
-
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-5 col-lg-offset-1 price-boxes">
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<h6><a href="https://www.cryptocompare.com">Source: CryptoCompare.com</a></h6>
+							<h2 class="price-display">BTC - USD <span class="price" id="PRICE_BTC"></span></h2>
+							<h5>24h Change: <span id="CHANGE_BTC"></span><span id="CHANGEPCT_BTC"></span><br></h5>
+							<h5>Last Market: <span class="exchange" id="LASTMARKET_BTC"></span> <br></h5>
+							<h5>Trade ID: <span id="LASTTRADEID_BTC"></span><br></h5>
+							<h5>Open Hour: <span id="OPENHOUR_BTC"></span><br></h5>
+							<h5>High Hour: <span id="HIGHHOUR_BTC"></span><br></h5>
+							<h5>Low Hour: <span id="LOWHOUR_BTC"></span><br></h5>
+							<h5>Open Day: <span id="OPEN24HOUR_BTC"></span><br></h5>
+							<h5>High Day: <span id="HIGH24HOUR_BTC"></span><br></h5>
+							<h5>Low Day: <span id="LOW24HOUR_BTC"></span><br></h5>
+							<h5>Last Trade Volume: <span id="LASTVOLUME_BTC"></span><br></h5>
+							<h5>Last Trade Volume To: <span id="LASTVOLUMETO_BTC"></span><br></h5>
+							<h5>24h Volume: <span id="VOLUME24HOUR_BTC"></span><br></h5>
+							<h5>24h VolumeTo: <span id="VOLUME24HOURTO_BTC"></span><br></h5>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-5 price-boxes">
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<h6><a href="https://www.cryptocompare.com">Source: CryptoCompare.com</a></h6>
+							<h2 class="price-display">ETH - USD <span class="price" id="PRICE_ETH"></span></h2>
+							<h5>24h Change: <span id="CHANGE_ETH"></span><span id="CHANGEPCT_ETH"></span><br></h5>
+							<h5>Last Market: <span class="exchange" id="LASTMARKET_ETH"></span> <br></h5>
+							<h5>Trade ID: <span id="LASTTRADEID_ETH"></span><br></h5>
+							<h5>Open Hour: <span id="OPENHOUR_ETH"></span><br></h5>
+							<h5>High Hour: <span id="HIGHHOUR_ETH"></span><br></h5>
+							<h5>Low Hour: <span id="LOWHOUR_ETH"></span><br></h5>
+							<h5>Open Day: <span id="OPEN24HOUR_ETH"></span><br></h5>
+							<h5>High Day: <span id="HIGH24HOUR_ETH"></span><br></h5>
+							<h5>Low Day: <span id="LOW24HOUR_ETH"></span><br></h5>
+							<h5>Last Trade Volume: <span id="LASTVOLUME_ETH"></span><br></h5>
+							<h5>Last Trade Volume To: <span id="LASTVOLUMETO_ETH"></span><br></h5>
+							<h5>24h Volume: <span id="VOLUME24HOUR_ETH"></span><br></h5>
+							<h5>24h VolumeTo: <span id="VOLUME24HOURTO_ETH"></span><br></h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="../ccc-streamer-utilities.js"></script>
+	<script src="./stream.js"></script>
 </body>
+
 </html>

@@ -1,56 +1,46 @@
-.wrapper {
-	width: 320px;
-	height: 250px;
-	margin: 50px;
-	background-color: #132c40;
-	color: white;
-	padding: 15px 50px 10px 50px;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	border-radius: 5px;
-	font-size: 15px;
-}
+	body {
+		background-color: black;
+		font-size: 17px;
+		color: white;
+	}
 
-h1 {
-	font-size: 24px;
-	color: #85c1cc;
-	padding: 0;
-}
+	.panel {
+		background-color: rgb(50, 50, 50);
+	}
 
-.label {
-	color: #a5bdc1;
-}
+	.panel-body {
+		padding-left: 10%;
+	}
 
-.price {
-	font-size: 25px;
-}
+	.price-boxes {
+		margin-top: 10%;
+	}
+	
+	a {
+		color:white;
+	}
 
-.value {
-	color: white;
-}
+	.price {
+		font-size: 25px;
+	}
 
-.up {
-	color: #1cf6ba;
-}
+	.price-display {
+		font-weight: bold;
+		text-align: center;
+	}
 
-.down {
-	color: #c84473;
-}
+	span {
+		color: orange;
+	}
 
-.source {
-	margin-top: 50px;
-	text-align: left;
-	font-size: 12px;
-}
+	.up {
+		color: green;
+	}
 
-a {
-	color: #eeeeee;
-	font-size: 12px;
-}
+	.down {
+		color: red;
+	}
 
-a:hover {
-	color: #c84473;
-}
-
-.market {
-	color: #1cf6ba;
-}
+	.exchange {
+		color: #42f492;
+	}

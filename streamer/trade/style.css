@@ -1,79 +1,41 @@
-body {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+	body {
+		font-size: 9px;
+		color: white;
+	}
 
-.wrapper {
-	width: 700px;
-	background-color: #132c40;
-	margin: auto;
-	display: block;
-	padding: 20px;
-	border-radius: 5px;
-}
+	#source {
+		margin: 0;
+	}
 
-h1 {
-	color: white;
-}
+	a {
+		color: white;
+	}
 
-table {
-	width: 500px;
-	margin: auto;
-	border: white;
-}
+	a:hover {
+		color: red;
+	}
 
-th {
-	color: white;
-}
+	.btn {
+		margin: 5% 0 0 0;
+	}
 
-td {
-	text-align: right;
-	color: white;
-}
+	.subon {
+		border-color: blue;
+	}
 
-.Buy {
-	background-color: #3dd2cc;
-}
+	.panel {
+		background-color: rgb(30, 30, 30);
+		margin-top: 3%;
+	}
 
-.Sell {
-	background-color: #c84473;
-}
+	.BUY {
+		color: green;
+	}
 
-.Unknown {
-	background-color: #3e6b89;
-}
+	.SELL {
+		color: red;
+	}
 
-.source {
-	text-align: left;
-	font-size: 15px;
-	color: white;
-	margin: 10px;
-}
-
-a {
-	color: #eeeeee;
-	font-size: 15px;
-}
-
-a:hover {
-	color: #c84473;
-}
-
-.subs-button {
-	width: 100px;
-	height: 50px;
-	background-color: #3dd2cc;
-	font-size: 12px;
-	margin: 10px;
-}
-
-.unsubs-button {
-	width: 100px;
-	height: 50px;
-	background-color: #c84473;
-	font-size: 12px;
-	margin: 10px;
-}
-
-#message {
-	color: white;
-}
+	.UNKNOWN {
+		color: rgb(240, 240, 240);
+	}
