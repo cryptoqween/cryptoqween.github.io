@@ -35,7 +35,7 @@
 	.SELL {
 		color: red;
 	}
-
-	.UNKNOWN {
-		color: rgb(240, 240, 240);
+	
+	#sub-exchanges {
+		color:gray;
 	}
