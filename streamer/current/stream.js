@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+	var currentPrice = {};
 	var socket = io.connect('https://streamer.cryptocompare.com/');
 	//Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
 	//Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
@@ -7,48 +8,50 @@ $(document).ready(function() {
 	var subscription = ['5~CCCAGG~BTC~USD', '5~CCCAGG~ETH~USD'];
 	socket.emit('SubAdd', { subs: subscription });
 	socket.on("m", function(message) {
-		dataUnpack(message);
+		var messageType = message.substring(0, message.indexOf("~"));
+		var res = {};
+		if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
+			res = CCC.CURRENT.unpack(message);
+			dataUnpack(res);
+		}
 	});
 
-	var dataUnpack = function(message) {
-
-		var newPrice = CCC.CURRENT.unpack(message);
-		var from = newPrice['FROMSYMBOL'];
+	var dataUnpack = function(data) {
+		var from = data['FROMSYMBOL'];
+		var to = data['TOSYMBOL'];
 		var fsym = CCC.STATIC.CURRENCY.getSymbol(from);
-		var to = newPrice['TOSYMBOL'];
 		var tsym = CCC.STATIC.CURRENCY.getSymbol(to);
-		var current = {};
+		var pair = from + to;
+		console.log(data);
 
-		for (var key in newPrice) {
-			current[key] = newPrice[key];
-			if (key == 'LASTVOLUMETO' || key == 'VOLUME24HOURTO') {
-				current[key] = CCC.convertValueToDisplay(tsym, newPrice[key]);
-			}
-			else if (key == 'LASTVOLUME' || key == 'VOLUME24HOUR' || key == 'OPEN24HOUR' || key == 'OPENHOUR' || key == 'HIGHHOUR' || key == 'LOWHOUR' || key == 'LOW24HOUR') {
-				current[key] = CCC.convertValueToDisplay(fsym, newPrice[key]);
-			}
+		if (!currentPrice.hasOwnProperty(pair)) {
+			currentPrice[pair] = {};
 		}
 
-		if (current['HIGH24HOUR']) {
-			current.CHANGE = CCC.convertValueToDisplay(fsym, (current['PRICE'] - current['HIGH24HOUR']));
-			current.CHANGEPCT = ((current['PRICE'] - current['HIGH24HOUR']) / current['HIGH24HOUR'] * 100).toFixed(2) + "%";
-			current.HIGH24HOUR = CCC.convertValueToDisplay(fsym, current.HIGH24HOUR);
+		for (var key in data) {
+			currentPrice[pair][key] = data[key];
 		}
 
-		if (current['LASTTRADEID']) {
-			current['LASTTRADEID'] = newPrice['LASTTRADEID'].toFixed(0);
+		if (currentPrice[pair]['LASTTRADEID']) {
+			currentPrice[pair]['LASTTRADEID'] = parseInt(currentPrice[pair]['LASTTRADEID']).toFixed(0);
 		}
-
-		displayData(current, from);
+		currentPrice[pair]['CHANGE24HOUR'] = CCC.convertValueToDisplay(tsym, (currentPrice[pair]['PRICE'] - currentPrice[pair]['OPEN24HOUR']));
+		currentPrice[pair]['CHANGE24HOURPCT'] = ((currentPrice[pair]['PRICE'] - currentPrice[pair]['OPEN24HOUR']) / currentPrice[pair]['OPEN24HOUR'] * 100).toFixed(2) + "%";;
+		displayData(currentPrice[pair], from, tsym, fsym);
 	};
 
-	var displayData = function(current, from) {
-
-		var direction = current.FLAGS;
-
+	var displayData = function(current, from, tsym, fsym) {
+		console.log(current);
+		var priceDirection = current.FLAGS;
 		for (var key in current) {
-			if (key == 'CHANGEPCT') {
+			if (key == 'CHANGE24HOURPCT') {
 				$('#' + key + '_' + from).text(' (' + current[key] + ')');
+			}
+			else if (key == 'LASTVOLUMETO' || key == 'VOLUME24HOURTO') {
+				$('#' + key + '_' + from).text(CCC.convertValueToDisplay(tsym, current[key]));
+			}
+			else if (key == 'LASTVOLUME' || key == 'VOLUME24HOUR' || key == 'OPEN24HOUR' || key == 'OPENHOUR' || key == 'HIGH24HOUR' || key == 'HIGHHOUR' || key == 'LOWHOUR' || key == 'LOW24HOUR') {
+				$('#' + key + '_' + from).text(CCC.convertValueToDisplay(fsym, current[key]));
 			}
 			else {
 				$('#' + key + '_' + from).text(current[key]);
@@ -56,12 +59,19 @@ $(document).ready(function() {
 		}
 
 		$('#PRICE_' + from).removeClass();
-
-		if (direction == 1) {
+		if (priceDirection & 1) {
 			$('#PRICE_' + from).addClass("up");
 		}
-		else if (direction == 2) {
+		else if (priceDirection & 2) {
 			$('#PRICE_' + from).addClass("down");
+		}
+		if (current['PRICE'] > current['OPEN24HOUR']) {
+			$('#CHANGE24HOURPCT_' + from).removeClass();
+			$('#CHANGE24HOURPCT_' + from).addClass("up");
+		}
+		else if (current['PRICE'] < current['OPEN24HOUR']) {
+			$('#CHANGE24HOURPCT_' + from).removeClass();
+			$('#CHANGE24HOURPCT_' + from).addClass("down");
 		}
 	};
 });
