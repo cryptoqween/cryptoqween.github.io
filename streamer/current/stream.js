@@ -5,15 +5,16 @@ $(document).ready(function() {
 	//Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
 	//Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
 	//For aggregate quote updates use CCCAGG as market
-	var subscription = ['5~CCCAGG~BTC~USD', '5~CCCAGG~ETH~USD'];
+	var subscription = ['11~BTC']; //, '5~CCCAGG~BTC~USD', '5~CCCAGG~ETH~USD', '2~Coinbase~BTC~USD', '0~Coinbase~BTC~USD', '11~ETH', '11~CCCAGG~BTC~USD', 'JPX', '9ROCKSTAR'];
 	socket.emit('SubAdd', { subs: subscription });
 	socket.on("m", function(message) {
-		var messageType = message.substring(0, message.indexOf("~"));
+		console.log(message);
+		/*var messageType = message.substring(0, message.indexOf("~"));
 		var res = {};
 		if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
 			res = CCC.CURRENT.unpack(message);
 			dataUnpack(res);
-		}
+		}*/
 	});
 
 	var dataUnpack = function(data) {
@@ -22,7 +23,6 @@ $(document).ready(function() {
 		var fsym = CCC.STATIC.CURRENCY.getSymbol(from);
 		var tsym = CCC.STATIC.CURRENCY.getSymbol(to);
 		var pair = from + to;
-		console.log(data);
 
 		if (!currentPrice.hasOwnProperty(pair)) {
 			currentPrice[pair] = {};
@@ -40,21 +40,25 @@ $(document).ready(function() {
 		displayData(currentPrice[pair], from, tsym, fsym);
 	};
 
+	var decorateWithFullVolume = function() {
+
+	}
+
 	var displayData = function(current, from, tsym, fsym) {
-		console.log(current);
 		var priceDirection = current.FLAGS;
-		for (var key in current) {
-			if (key == 'CHANGE24HOURPCT') {
-				$('#' + key + '_' + from).text(' (' + current[key] + ')');
-			}
-			else if (key == 'LASTVOLUME' || key == 'VOLUME24HOUR') {
-				$('#' + key + '_' + from).text(CCC.convertValueToDisplay(fsym, current[key]));
-			}
-			else if (key == 'LASTVOLUMETO' || key == 'VOLUME24HOURTO' || key == 'OPEN24HOUR' || key == 'OPENHOUR' || key == 'HIGH24HOUR' || key == 'HIGHHOUR' || key == 'LOWHOUR' || key == 'LOW24HOUR') {
-				$('#' + key + '_' + from).text(CCC.convertValueToDisplay(tsym, current[key]));
-			}
-			else {
-				$('#' + key + '_' + from).text(current[key]);
+		var fields = CCC.CURRENT.DISPLAY.FIELDS;
+
+		for (var key in fields) {
+			if (fields[key].Show) {
+				switch (fields[key].Filter) {
+					case 'String':
+						$('#' + key + '_' + from).text(current[key]);
+						break
+					case 'Number':
+						var symbol = fields[key].Symbol == 'TOSYMBOL' ? tsym : fsym;
+						$('#' + key + '_' + from).text(CCC.convertValueToDisplay(symbol, current[key]))
+						break
+				}
 			}
 		}
 
@@ -65,13 +69,14 @@ $(document).ready(function() {
 		else if (priceDirection & 2) {
 			$('#PRICE_' + from).addClass("down");
 		}
+
 		if (current['PRICE'] > current['OPEN24HOUR']) {
 			$('#CHANGE24HOURPCT_' + from).removeClass();
-			$('#CHANGE24HOURPCT_' + from).addClass("up");
+			$('#CHANGE24HOURPCT_' + from).addClass("pct-up");
 		}
 		else if (current['PRICE'] < current['OPEN24HOUR']) {
 			$('#CHANGE24HOURPCT_' + from).removeClass();
-			$('#CHANGE24HOURPCT_' + from).addClass("down");
+			$('#CHANGE24HOURPCT_' + from).addClass("pct-down");
 		}
 	};
 });

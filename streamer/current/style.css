@@ -22,6 +22,7 @@
 
 	.price {
 		font-size: 25px;
+		padding-left:2%;
 	}
 
 	.price-display {
@@ -40,7 +41,24 @@
 	.down {
 		color: red;
 	}
+	
+	.pct-up {
+		font-size: 12px;
+		color: green;
+		padding-left: 1%;
+	}
+
+	.pct-down {
+		font-size: 12px;
+		color: red;
+		padding-left: 1%;
+	}
 
 	.exchange {
 		color: #42f492;
+	} 
+	
+	.pct-change {
+		font-size:12px;
+		padding-left:2%;
 	}
