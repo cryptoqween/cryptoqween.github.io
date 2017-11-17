@@ -3,11 +3,13 @@ $(document).ready(function() {
 	var currentPrice = {};
 	var socket = io.connect('https://streamer.cryptocompare.com/');
 	//Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
-	//Use SubscriptionId 0 for TRADE, 2 for CURRENT and 5 for CURRENTAGG
+	//Use SubscriptionId 0 for TRADE, 2 for CURRENT, 5 for CURRENTAGG eg use key '5~CCCAGG~BTC~USD' to get aggregated data from the CCCAGG exchange 
+	//Full Volume Format: 11~{FromSymbol} eg use '11~BTC' to get the full volume of BTC against all coin pairs
 	//For aggregate quote updates use CCCAGG ags market
-	var subscription = ['11~BTC', '5~CCCAGG~BTC~USD', '11~ETH', '5~CCCAGG~ETH~USD']; //, '5~CCCAGG~BTC~USD', '5~CCCAGG~ETH~USD', '2~Coinbase~BTC~USD', '0~Coinbase~BTC~USD', '11~ETH', '11~CCCAGG~BTC~USD', 'JPX', '9ROCKSTAR'];
+	var subscription = ['5~CCCAGG~BTC~USD', '5~CCCAGG~ETH~USD', '11~BTC', '11~ETH'];
 	socket.emit('SubAdd', { subs: subscription });
 	socket.on("m", function(message) {
+		console.log(message);
 		var messageType = message.substring(0, message.indexOf("~"));
 		if (messageType == CCC.STATIC.TYPE.CURRENTAGG) {
 			dataUnpack(message);
@@ -49,18 +51,17 @@ $(document).ready(function() {
 		var fsym = CCC.STATIC.CURRENCY.getSymbol(from);
 		var tsym = CCC.STATIC.CURRENCY.getSymbol(to);
 		var pair = from + to;
-		
+
 		if (!currentPrice.hasOwnProperty(pair)) {
 			currentPrice[pair] = {};
 		}
 
-		currentPrice[pair]['FULLVOLUMEFROM'] = parseInt(volData['FULLVOLUME']);
+		currentPrice[pair]['FULLVOLUMEFROM'] = parseFloat(volData['FULLVOLUME']);
 		currentPrice[pair]['FULLVOLUMETO'] = ((currentPrice[pair]['FULLVOLUMEFROM'] - currentPrice[pair]['VOLUME24HOUR']) * currentPrice[pair]['PRICE']) + currentPrice[pair]['VOLUME24HOURTO'];
 		displayData(currentPrice[pair], from, tsym, fsym);
 	};
 
 	var displayData = function(messageToDisplay, from, tsym, fsym) {
-		console.log(currentPrice);
 		var priceDirection = messageToDisplay.FLAGS;
 		var fields = CCC.CURRENT.DISPLAY.FIELDS;
 

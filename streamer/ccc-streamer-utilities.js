@@ -382,8 +382,8 @@ CCC.CURRENT.DISPLAY.FIELDS = {
   'LASTMARKET': { 'Show': true, 'Filter': 'String' },
   'CHANGE24HOUR': { 'Show': true, 'Filter': 'String' },
   'CHANGE24HOURPCT': { 'Show': true, 'Filter': 'String' },
-  'FULLVOLUMEFROM': { 'Show': true, 'Filter': 'Number' },
-  'FULLVOLUMETO': { 'Show': true, 'Filter': 'Number' }
+  'FULLVOLUMEFROM': { 'Show': true, 'Filter': 'Number', 'Symbol': 'FROMSYMBOL' },
+  'FULLVOLUMETO': { 'Show': true, 'Filter': 'Number', 'Symbol': 'TOSYMBOL' }
 };
 
 CCC.CURRENT.pack = function(currentObject) {
