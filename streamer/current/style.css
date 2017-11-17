@@ -46,19 +46,16 @@
 		font-size: 12px;
 		color: green;
 		padding-left: 1%;
+		font-weight:bold;
 	}
 
 	.pct-down {
 		font-size: 12px;
 		color: red;
 		padding-left: 1%;
+		font-weight:bold;
 	}
 
 	.exchange {
 		color: #42f492;
 	} 
-	
-	.pct-change {
-		font-size:12px;
-		padding-left:2%;
-	}

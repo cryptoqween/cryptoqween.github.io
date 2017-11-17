@@ -381,7 +381,9 @@ CCC.CURRENT.DISPLAY.FIELDS = {
   'LOW24HOUR': { 'Show': true, 'Filter': 'Number', 'Symbol': 'TOSYMBOL' },
   'LASTMARKET': { 'Show': true, 'Filter': 'String' },
   'CHANGE24HOUR': { 'Show': true, 'Filter': 'String' },
-  'CHANGE24HOURPCT': { 'Show': true, 'Filter': 'String' }
+  'CHANGE24HOURPCT': { 'Show': true, 'Filter': 'String' },
+  'FULLVOLUMEFROM': { 'Show': true, 'Filter': 'Number' },
+  'FULLVOLUMETO': { 'Show': true, 'Filter': 'Number' }
 };
 
 CCC.CURRENT.pack = function(currentObject) {
@@ -432,8 +434,6 @@ CCC.CURRENT.getKeyFromStreamerData = function(streamerData) {
   return valuesArray[0] + '~' + valuesArray[1] + '~' + valuesArray[2] + '~' + valuesArray[3];
 };
 
-
-
 CCC.TOTALVOLUME = CCC.TOTALVOLUME || {};
 
 CCC.TOTALVOLUME.FIELDS = {
@@ -444,40 +444,25 @@ CCC.TOTALVOLUME.FIELDS = {
 
 CCC.TOTALVOLUME.unpack = function(volStr) {
   var valuesArray = volStr.split("~");
-  var valuesArrayLength = valuesArray.length;
-  var mask = valuesArray[valuesArrayLength - 1];
-  var maskInt = parseInt(mask, 16);
   var unpackedCurrent = {};
   var currentField = 0;
-  for (var property in this.FIELDS) {
-    if (this.FIELDS[property] === 0) {
+  var fields = this.FIELDS
+  for (var property in fields) {
+    if (fields[property] == 0) {
       unpackedCurrent[property] = valuesArray[currentField];
       currentField++;
     }
-    else if (maskInt & this.FIELDS[property]) {
-      //i know this is a hack, for cccagg, future code please don't hate me:(, i did this to avoid
-      //subscribing to trades as well in order to show the last market
-      if (property === 'LASTMARKET') {
-        unpackedCurrent[property] = valuesArray[currentField];
-      }
-      else {
-        unpackedCurrent[property] = parseFloat(valuesArray[currentField]);
-      }
-      currentField++;
-    }
   }
-
   return unpackedCurrent;
 };
 
 CCC.TOTALVOLUME.pack = function(volObj) {
-  var mask = 0;
-  var packedTrade = '';
-  for (var field in volObj) {
-    packedTrade += '~' + volObj[field];
-    mask |= this.FIELDS[field];
+  var packedVol = '';
+  for (var property in volObj) {
+    packedVol += '~' + volObj[property];
   }
-  return packedTrade.substr(1) + '~' + mask.toString(16);
+  var strToReturn = packedVol.substr(1);
+  return strToReturn;
 };
 
 CCC.noExponents = function(value) {
