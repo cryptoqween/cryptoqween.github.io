@@ -383,19 +383,19 @@ CCC.CURRENT.getKeyFromStreamerData = function(streamerData) {
   return valuesArray[0] + '~' + valuesArray[1] + '~' + valuesArray[2] + '~' + valuesArray[3];
 };
 
-CCC.TOTALVOLUME = CCC.TOTALVOLUME || {};
+CCC.FULLVOLUME = CCC.FULLVOLUME || {};
 
-CCC.TOTALVOLUME.FIELDS = {
+CCC.FULLVOLUME.FIELDS = {
   'TYPE': 0x0,
   'SYMBOL': 0x0,
   'FULLVOLUME': 0x0
 };
 
-CCC.TOTALVOLUME.unpack = function(volStr) {
+CCC.FULLVOLUME.unpack = function(volStr) {
   var valuesArray = volStr.split("~");
   var unpackedCurrent = {};
   var currentField = 0;
-  var fields = this.FIELDS
+  var fields = this.FIELDS;
   for (var property in fields) {
     if (fields[property] == 0) {
       unpackedCurrent[property] = valuesArray[currentField];
@@ -405,13 +405,16 @@ CCC.TOTALVOLUME.unpack = function(volStr) {
   return unpackedCurrent;
 };
 
-CCC.TOTALVOLUME.pack = function(volObj) {
+CCC.FULLVOLUME.pack = function(volObj) {
   var packedVol = '';
-  for (var property in volObj) {
-    packedVol += '~' + volObj[property];
+  var fields = this.FIELDS;
+  
+  for(var property in fields) {
+    if (volObj.hasOwnProperty(property) && fields[property] == 0) {
+      packedVol += '~' + volObj[property];  
+    }
   }
-  var strToReturn = packedVol.substr(1);
-  return strToReturn;
+  return packedVol.substr(1);
 };
 
 CCC.noExponents = function(value) {
