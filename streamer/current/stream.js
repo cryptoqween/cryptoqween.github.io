@@ -47,11 +47,11 @@ $(document).ready(function() {
 			if (key == 'CHANGE24HOURPCT') {
 				$('#' + key + '_' + from).text(' (' + current[key] + ')');
 			}
-			else if (key == 'LASTVOLUMETO' || key == 'VOLUME24HOURTO') {
-				$('#' + key + '_' + from).text(CCC.convertValueToDisplay(tsym, current[key]));
-			}
-			else if (key == 'LASTVOLUME' || key == 'VOLUME24HOUR' || key == 'OPEN24HOUR' || key == 'OPENHOUR' || key == 'HIGH24HOUR' || key == 'HIGHHOUR' || key == 'LOWHOUR' || key == 'LOW24HOUR') {
+			else if (key == 'LASTVOLUME' || key == 'VOLUME24HOUR') {
 				$('#' + key + '_' + from).text(CCC.convertValueToDisplay(fsym, current[key]));
+			}
+			else if (key == 'LASTVOLUMETO' || key == 'VOLUME24HOURTO' || key == 'OPEN24HOUR' || key == 'OPENHOUR' || key == 'HIGH24HOUR' || key == 'HIGHHOUR' || key == 'LOWHOUR' || key == 'LOW24HOUR') {
+				$('#' + key + '_' + from).text(CCC.convertValueToDisplay(tsym, current[key]));
 			}
 			else {
 				$('#' + key + '_' + from).text(current[key]);
