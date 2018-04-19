@@ -1,7 +1,7 @@
 # CryptoCompare API Tutorial
 These examples show how you can use the CryptoCompare API.
 
-Read official documentation [here](https://www.cryptocompare.com/api).
+Read official UPDATED documentation [here](https://min-api.cryptocompare.com/).
 
 ## Content
 
