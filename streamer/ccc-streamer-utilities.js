@@ -6,7 +6,7 @@ CCC.STATIC.TYPE = {
   'TRADE': '0',
   'FEEDNEWS': '1',
   'CURRENT': '2',
-  'LOADCOMPLATE': '3',
+  'LOADCOMPLETE': '3',
   'COINPAIRS': '4',
   'CURRENTAGG': '5',
   'TOPLIST': '6',
