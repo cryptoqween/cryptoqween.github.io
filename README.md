@@ -1,4 +1,10 @@
-# CryptoCompare API Tutorial
+# This version of the streaming API will be deprecated soon
+Please move to the V2 streaming API as soon as possible.
+Read the documentation [here](https://min-api.cryptocompare.com/documentation/websockets)
+
+
+# Deprecated
+
 These examples show how you can use the CryptoCompare API.
 
 Read official UPDATED documentation [here](https://min-api.cryptocompare.com/).
