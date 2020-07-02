@@ -1,6 +1,6 @@
-# This version of the streaming API will be deprecated soon
-Please move to the V2 streaming API as soon as possible.
-Read the documentation [here](https://min-api.cryptocompare.com/documentation/websockets)
+# This version of the streaming API is not supported anymore and is being sunset in the coming days
+## Please move to the V2 streaming API as soon as possible.
+## Read the documentation [here](https://min-api.cryptocompare.com/documentation/websockets)
 
 
 # Deprecated
